@@ -1,38 +1,48 @@
 import React from "react";
-import Header from "../components/Header/Header";
 import FloatingMusicPlayer from "./FloatingMusicPlayer";
 import Player from "./Player";
+import { usePlaylist } from "../context/PlaylistContext";
+import { toast } from "react-toastify";
+import { Youtube } from "lucide-react";
 
-function PlaylistCard({ mood, thought, icon }) {
+function PlaylistCard() {
+
+   const {playlist} = usePlaylist()
+
+   console.log(playlist)
+
+   if(!playlist){
+    toast.error("Playlist not found")
+   }
+
   return (
-    <section className="w-full min-h-screen py-2 flex flex-col gap-10">
-      <Header />
+    <section className="w-full min-h-screen py-20 flex flex-col gap-10">
       <div
         className={`w-[80%] lg:w-[60%] mx-auto rounded-lg  flex flex-col items-center gap-15`}
       >
         
         {/* thought and mood display */}
         <div className="flex flex-col gap-5">
-          <div className=" flex flex-row items-center justify-center gap-4">
+          <div className=" flex flex-col items-center justify-center gap-4">
             {/* mood heading */}
             <h1 className="text-center text-white text-4xl font-medium">
-              Your vibe : <span className="font-bold">{mood}</span> <span className="text-4xl">{icon}</span>
+              Your vibe : <span className="text-green-400 font-semibold">{playlist.emotion}</span>
             </h1>
-
+            <h1 className="text-center text-white text-xl font-medium flex items-center gap-1">
+              Source : <span className="text-[#f36242] font-semibold">{playlist.source}</span> <span>
+                <Youtube color="#FD3A3A" size={28}/>
+              </span>
+            </h1>
+          <h1 className='text-center text-green-500 lg:text-lg mt-10'>
+            Your playlist is ready 🎭 . Enjoy the music and don't forget to save your favorite track 🎶.
+          </h1>
           </div>
 
-          <p className="text-(--color-secondary) font-semibold text-xl text-center px-2 py-2">
-            {thought}
-          </p>
         </div>
 
         {/* palylist div */}
         <div className="w-full">
-          <Player />
-          <Player />
-          <Player />
-          <Player />
-          <Player />
+          <Player/>
         </div>
 
         <div>

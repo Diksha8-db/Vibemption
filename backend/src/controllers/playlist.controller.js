@@ -6,7 +6,7 @@ import axios from "axios";
 import { GoogleGenAI } from "@google/genai";
 
 const fetchPlaylist = asyncHandler(async (req, res) => {
-  const { inputtedText } = req.body;
+  const { inputtedText } = req.query;
 
   if (inputtedText?.trim() === "") {
     throw new ApiError(400, "Some input is required to generate playlist");

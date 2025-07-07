@@ -1,43 +1,93 @@
-import React, { useState } from "react";
-import { Heart, Music } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Heart } from "lucide-react";
+import axios from '../utils/axios.js';
+import { usePlaylist } from "../context/PlaylistContext";
+import { toast } from "react-toastify";
 
 function Player() {
+  const { playlist } = usePlaylist();
+  console.log(playlist);
+  
+  const trackSong = playlist?.tracks || [];
 
-  const [isFavourites, setIsFavourites] = useState(false);
+  // State to keep track of each track's favorite status
+  const [favourites, setFavourites] = useState({});
+
+  useEffect(() => {
+
+    const initialFavorites = trackSong.reduce((acc, song) => {
+      acc[song._id] = false; 
+      return acc;
+    }, {});
+    setFavourites(initialFavorites);
+  }, [trackSong]);
+
+  // Function to extract YouTube video ID
+  function getVideoId(url) {
+    const match = url.match(/(?:youtube\.com\/(?:[^/]+\/\S+\/|\S+\/|(?:v|e(?:mbed)?)\/|\S+\?v=)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    return match && match[1];
+  }
+
+  const handleAddToFavourites = async (e, songId) => {
+    e.preventDefault();
+    try {
+      await axios
+      .post('/favourites/',
+         { trackId : songId,
+          }, { withCredentials: true });
+      setFavourites((prevFavorites) => ({ ...prevFavorites, [songId]: true }));
+      toast.success("Added to favorites");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Could not add to favorites");
+    }
+  };
+
+  const handleDeleteFromFavourites = async (e, songId) => {
+    e.preventDefault();
+    try {
+      await axios.delete('/favourites/', { data: { trackId : songId } }, { withCredentials: true });
+      setFavourites((prevFavorites) => ({ ...prevFavorites, [songId]: false }));
+      toast.success("Removed from favorites");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Could not remove from favorites");
+    }
+  };
 
   return (
     <div className='pt-3'>
-      <div className="px-4 py-2 bg-[#241132] hover:opacity-60 transition-all duration-300 rounded-xl flex flex-row items-center justify-between">
-        <div className="flex flex-row gap-6">
+      {trackSong.map((song, index) => {
+        const videoId = getVideoId(song.link);
+        const isFavourite = favourites[song._id];
 
-          <button className="px-3 cursor-pointer bg-blue-950 rounded-full flex items-center"
+        return (
+          <div
+            key={index}
+            className="px-4 py-2 bg-[#241132] hover:opacity-60 transition-all duration-300 rounded-xl flex flex-row items-center justify-between mb-6"
           >
+            <div className="flex flex-row gap-6 items-center">
+              <iframe
+              className='object-cover rounded-sm'
+                width="40" height="40" src={`https://www.youtube.com/embed/${videoId}`}
+              />
 
-              <Music strokeWidth={2} color="#1ed760" />
-          </button>
+              <div className='flex flex-col gap-2'>
+                <h1 className="text-sm md:text-xl text-white font-semibold">{song.title}</h1>
+                <h1 className='text-sm md:text-lg text-gray-400'>{song.channelTitle}</h1>
+              </div>
+            </div>
 
-          <div>
-            <h1 className="text-lg md:text-xl text-white font-semibold">Sunny Beats</h1>
-            <h1 className='text-(--color-secondary)'>Lizzo</h1>
+            <div className="text-xl flex flex-row gap-4">
+              {/* Add or Remove from Favorites */}
+              <button
+                className='cursor-pointer'
+                onClick={(e) => (isFavourite ? handleDeleteFromFavourites(e, song._id) : handleAddToFavourites(e, song._id))}
+              >
+                <Heart fill={isFavourite ? "#E60178" : "white"} strokeWidth={isFavourite ? 0 : 1} color="blue" />
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div className="text-xl flex flex-row gap-4">
-          <p className="font-semibold text-gray-300">2:39</p>
-
-          {/* adding to favourites */}
-          <button
-          className='cursor-pointer md:block hidden'
-            onClick={() => setIsFavourites(!isFavourites)}
-          >
-            {isFavourites ? (
-              <Heart fill="#E60178" size={32} strokeWidth={0} />
-            ) : (
-              <Heart fill="white" strokeWidth={1} color="blue" size={32} />
-            )}
-          </button>
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 }

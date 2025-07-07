@@ -44,7 +44,9 @@ function About() {
             ><span className='text-(--color-primary) font-bold text-lg'>Vibemption</span> is where your emotions find their sound.</p>
             <p>With every click, mood , and moment - we listen, and we respond. Let your heartbeat guide the beats, and your feelings choose the flow.</p>
             <p>It's not just music - it's your emotional sidekick with beats. Made for late-night thoughts 💭 and worthy wins🏆</p>
-            <button className='text-black bg-(--color-primary) rounded-2xl px-5 py-1 mt-6 text-center hover:bg-transparent hover:border-1 hover:border-(--color-primary) hover:text-(--color-primary) font-semibold transition-all duration-500 text-[16px]'>Explore Now</button>
+            <a
+            href="/#home"
+            className='text-black bg-(--color-primary) rounded-2xl px-5 py-1 mt-6 text-center hover:bg-transparent hover:border-1 hover:border-(--color-primary) hover:text-(--color-primary) font-semibold transition-all duration-500 text-[16px]'>Explore Now</a>
           </div>
         </div>
       </div>

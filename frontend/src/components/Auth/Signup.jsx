@@ -38,7 +38,7 @@ function Signup() {
       localStorage.setItem('token', res.data.refreshToken);
 
       toast.success("Registered Successfully!! Redirecting....")
-      navigate('/users/dashboard')
+      navigate('/dashboard')
 
     } catch (err) {
       console.error("Registration failed:", err.response?.data || err.message);
@@ -50,11 +50,8 @@ function Signup() {
   };
 
   return (
-    <section className="w-full px-3 pb-8 pt-3">
-      
-      <div className="px-4 pt-1">
-        <Logo />
-      </div>
+    <section className="w-full px-3 pb-20">
+
 
       <div className="w-[80%] mx-auto min-h-screen flex flex-col items-center justify-center">
         <div className="flex flex-col gap-10 w-[80%] mx-auto">
@@ -151,7 +148,7 @@ function Signup() {
               <p className="text-center text-(--color-secondary)">
                 Already have an account?{" "}
                 <Link
-                 to='/users/login'
+                 to='/login'
                  className="text-white font-semibold" href="">
                   Log in
                 </Link>

@@ -1,8 +1,7 @@
 import React,{useState} from "react";
 import "../../index.css";
 import axios from "../../utils/axios.js";
-import { ToastContainer, toast } from "react-toastify";
-import Logo from "../../ui/Logo";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +22,7 @@ function Login() {
         localStorage.setItem('token', response.data.refreshToken);
         
         toast.success("Logged in successfully.Redirecting...")
-        navigate('/users/dashboard')
+        navigate('/dashboard')
 
       }
       catch(error){
@@ -35,25 +34,9 @@ function Login() {
 
 
   return (
-    <section className="w-full px-3 pb-8 pt-3 min-h-screen">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+    <section className="w-full px-3 pb-8 min-h-screen">
 
-      <div className="px-3 py-1">
-        <Logo />
-      </div>
-
-      <div className="lg:w-[60%] w-[80%] mx-auto flex flex-col items-center justify-center pt-20">
+      <div className="lg:w-[60%] w-[80%] mx-auto flex flex-col items-center justify-center pt-8">
         <div className="flex flex-col gap-10 w-[80%] mx-auto">
           <h1 className="text-white text-center text-5xl font-semibold pt-20">
             Log In
@@ -101,7 +84,7 @@ function Login() {
               <p className="text-center text-(--color-secondary) pt-2">
                 New to Vibemption, let's create?{" "}
                 <Link
-                to='/users/register'
+                to='/signup'
                 className="text-white font-semibold">Sign up</Link>
               </p>
             </form>

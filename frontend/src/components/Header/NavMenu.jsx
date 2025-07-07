@@ -4,23 +4,23 @@ function NavMenu() {
     const navItems = [
         {
             name : "Home",
-            href : "#home",
+            href : "/#hero",
         },
         {
             name : "About",
-            href : "#about",
+            href : "/#about",
         },
         {
             name : "Explore",
-            href : "",
+            href : "/",
         },
         {
             name : "Dashboard",
-            href : "",
+            href : "/dashboard",
         },
         { 
             name : "Help",
-            href : ""
+            href : "/help"
         }
     ]
   return (

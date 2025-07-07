@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AuthHeader from "../Header/AuthHeader.jsx";
 import {
   House,
   Bookmark,
@@ -9,13 +8,12 @@ import {
   User,
   Mail,
 } from "lucide-react";
-import axios from '../../utils/axios.js'
-import Logo from "../../ui/Logo";
-import { ToastContainer , toast} from "react-toastify";
-import { useNavigate, Link } from "react-router-dom";
+import axios from "../../utils/axios.js";
+import { toast } from "react-toastify";
+import Loader from'../../ui/Loader.jsx'
 
 function UpdateProfile() {
-  const navItems = [
+   const navItems = [
     {
       name: "Home",
       href: "#home",
@@ -23,97 +21,86 @@ function UpdateProfile() {
     },
     {
       name: "About",
-      href: "#about",
+      href: "/#about",
       icon: <Bookmark />,
     },
     {
       name: "Dashboard",
-      href: "",
+      href: "/dashboard",
       icon: <LayoutDashboard />,
     },
     {
       name: "Favorites",
-      href: "",
+      href: "/favourites",
       icon: <Star />,
     },
     {
       name: "Playlist",
-      href: "",
+      href: "/explore",
       icon: <ListMusic />,
     },
   ];
 
-
-  const [formData, setFormData] = useState({
-    fullName : "",
-    coverImage : "",
-    email : '',
-  })
-
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false)
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    console.log("File:", file);
+
     if (file) {
       setImage(URL.createObjectURL(file));
-      setFormData({...formData, coverImage : file})
+      setFormData((prevData) => ({ ...prevData, coverImage: file }));
     }
   };
 
-  const updateUserProfile = async(e) => {
-    try{
+  const [formData, setFormData] = useState({
+    fullName: "",
+    coverImage: "",
+    email: "",
+  });
+
+  const updateUserProfile = async (e) => {
+    
+    try {
+      setLoading(true)
       e.preventDefault();
+      const formDataToSend = new FormData();
+      formDataToSend.append("fullName", formData.fullName);
+      formDataToSend.append("email", formData.email);
+      
+      // Append file if it exists
+      if (formData.coverImage) {
+        formDataToSend.append("coverImage", formData.coverImage);
+      }
 
-    const formPayload = new FormData();
-    formPayload.append("fullName", formData.fullName);
-    formPayload.append("email", formData.email);
-    formPayload.append("coverImage", formData.coverImage);
+      console.log(formDataToSend)
 
-    const token = localStorage.getItem('token');
-    const response = await axios.patch('/users/update-details', formPayload,
-      {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`
-      },
-      withCredentials: true,
+      const response = await axios.patch("/users/update-details", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Set header for file upload
+        },
+        withCredentials: true, // Send cookies (for JWT)
+      });
+
+      console.log(response.data);
+      toast.success("Profile Updated successfully !");
+    } catch (error) {
+      const message = error.response?.data?.message || "Something went wrong";
+
+      toast.error(message);
     }
-    )
-
-      console.log(response.data)
-      toast.success("Profile Updated successfully !")
+    finally{
+      setLoading(false)
     }
-    catch(error){
-      const message = error.response?.data?.message || "Something went wrong"
-
-      toast.error(message) 
-    }
-  }
+  };
 
   return (
+    <>
+    {loading ? 
+      <Loader/> :
     <section className="min-h-screen pb-20">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
       <div className="flex flex-col">
-        <div className="px-2 py-2">
-          <div className="lg:block hidden px-3 py-2">
-            <Logo />
-          </div>
-          <div className="lg:hidden block">
-            <AuthHeader />
-          </div>
-        </div>
-
         <div className="w-full mx-auto flex flex-col justify-between pt-[5rem]">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 items-center">
             {/* quick links */}
@@ -145,8 +132,10 @@ function UpdateProfile() {
                   Here you go !!
                 </p>
               </div>
-              <form className="items-center flex flex-col gap-4"
-              encType="multipart/form-data"
+              <form
+                className="items-center flex flex-col gap-4"
+                encType="multipart/form-data"
+                onSubmit={updateUserProfile}
               >
                 {/* photo */}
                 <div>
@@ -180,7 +169,9 @@ function UpdateProfile() {
                     name="fullName"
                     placeholder="Full Name"
                     className="text-(--color-secondary) outline-none w-full"
-                    onChange={(e) => setFormData({...formData, fullName : e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
                   />
                 </div>
                 {/* email */}
@@ -191,17 +182,26 @@ function UpdateProfile() {
                     placeholder="Email"
                     name="email"
                     className="text-(--color-secondary) outline-none w-full"
-                    onChange={(e) => setFormData({...formData, email : e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                   />
                 </div>
                 {/* buton */}
-                <div>
-                  <button 
-                  type="submit"
-                  onClick={updateUserProfile}
-                  className="mt-5 bg-(--color-primary) px-4 py-2 rounded-4xl text-(--color-blue-900) font-semibold opacity-95 hover:bg-[#261f2f] hover:text-(--color-primary) hover:border-2 hover:border-(--color-primary) cursor-pointer transition-all duration-500 text-[16px]">
+
+                <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-4'>
+                  <button
+                    type="submit"
+                    className="mt-5 bg-(--color-primary) px-4 py-2 rounded-4xl text-(--color-blue-900) font-semibold opacity-95 hover:bg-[#261f2f] hover:text-(--color-primary) hover:border-2 hover:border-(--color-primary) cursor-pointer transition-all duration-500 text-[16px]"
+                  >
                     Update Profile
                   </button>
+                  <a
+                    href='/dashboard'
+                    className="mt-5 bg-(--color-primary) px-4 py-2 rounded-4xl text-(--color-blue-900) font-semibold opacity-95 hover:bg-[#261f2f] hover:text-(--color-primary) hover:border-2 hover:border-(--color-primary) cursor-pointer transition-all duration-500 text-[16px]"
+                  >
+                    Go to Dashboard
+                  </a>
                 </div>
               </form>
             </div>
@@ -209,6 +209,8 @@ function UpdateProfile() {
         </div>
       </div>
     </section>
+    }
+    </>
   );
 }
 

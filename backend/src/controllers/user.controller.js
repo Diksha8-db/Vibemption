@@ -3,7 +3,7 @@ import { ApiError } from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import upload from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
-import { application } from "express";
+import jwt from "jsonwebtoken";
 
 const generateAccessAndRefreshToken = async(userId) => {
   try{
@@ -81,7 +81,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   if (
-    [email, password].some((field) => {
+    [email, password].some(field=> {
       field?.trim() === "";
     })
   ) {
@@ -201,12 +201,19 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if(!user){
+    return res.status(400).json(new ApiError(400, "Login/Sigup Required"))
+  }
+
   return res
     .status(200)
-    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+    .json(new ApiResponse(200, "Current user fetched successfully", req.user));
 });
 
 const updateUser = asyncHandler(async(req,res) => {
+
   const {fullName, email} = req.body
 
   const updateData = {}
@@ -219,12 +226,28 @@ const updateUser = asyncHandler(async(req,res) => {
     updateData.email = email?.trim();
   }
 
+
   if(Object.keys(updateData).length === 0){
     throw new ApiError(400, "At least one field is required to be updated")
   }
 
+  console.log(req.file)
+  console.log(req.body)
+
+  // coverImage upload should be optional
+  let coverImageUrl = "";
+
+  if(req.file?.path){
+    const uploadedImage = await upload(req.file.path);
+    coverImageUrl = uploadedImage?.url || "";
+  }
+
+
   const updatedUserDetails = await User.findByIdAndUpdate(req.user?._id,{
-    $set : updateData
+    $set : {
+      ...updateData,
+      coverImage : coverImageUrl
+    }
   },
   {
     new : true
@@ -234,39 +257,5 @@ const updateUser = asyncHandler(async(req,res) => {
  return res.status(200).json(new ApiResponse(200, "User details updated successfully", updatedUserDetails))
 })
 
-const updateCoverImage = asyncHandler(async(req,res) => {
 
-  const coverImageLocalPath = req.file?.path
-
-  console.log(coverImageLocalPath)
-
-  if(!coverImageLocalPath){
-    throw new ApiError(400, "Cover image is not uploaded")
-  }
-
-  const coverImage = await upload(coverImageLocalPath)
-
-  console.log("coverImage " , coverImage)
-
-  if(!coverImage.url){
-    throw new ApiError(400, "Failed to upload cover image")
-  }
-
-  console.log("coverimage url", coverImage.url)
-
-  const user = await User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      $set : {
-        coverImage : coverImage.url
-      },
-    },
-    { new : true }
-  ).select("-password")
-
-  console.log(user)
-
-    return res.status(200).json(new ApiResponse(200, "Cover Image updated successfully", user))
-})
-
-export { registerUser, loginUser, logoutUser,getCurrentUser, updateUser, updateCoverImage, refreshAccessToken };
+export { registerUser, loginUser, logoutUser,getCurrentUser, updateUser, refreshAccessToken };
