@@ -5,9 +5,12 @@ import NavMenu from "./NavMenu";
 import Logo from "../../ui/Logo";
 import axios from "../../utils/axios.js";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navigate = useNavigate()
 
   const navItems = [
     { name: "Home", href: "/#home" },
@@ -42,6 +45,23 @@ function Header() {
     checkAuth();
   },[])
 
+
+  const handleLogOut = async(e) => {
+    e.preventDefault();
+
+    try{
+      const response = await axios.post('/users/logout',{
+        withCredentials: true
+      })
+
+      toast.message("Logged out successfully!!")
+      setIsAuthenticated(false)
+      navigate('/')
+    }
+    catch(error){
+      toast.error(error.response?.data?.message || "Something went wrong")
+    }
+  }
   return (
     <section className="w-full px-2 py-2 ">
       <div className="md:w-[80%] w-[90%] mx-auto flex justify-between items-center">
@@ -73,7 +93,9 @@ function Header() {
               </button>
             </>
           ) : (
-            <button className="navButton px-4 font-semibold py-1">
+            <button 
+            onClick={handleLogOut}
+            className="navButton px-4 font-semibold py-1">
               Logout
             </button>
           )}
@@ -108,9 +130,11 @@ function Header() {
             </a>
             </>
             :
-            <a href="/logout" className="navButton px-4 font-semibold py-1">
+            <button
+            onClick={handleLogOut}
+            href="/logout" className="navButton px-4 font-semibold py-1">
             Logout
-          </a>
+          </button>
           }
             
           </div>

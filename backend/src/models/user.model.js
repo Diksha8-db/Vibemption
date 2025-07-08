@@ -33,14 +33,15 @@ const userSchema = new Schema({
         ref : "Playlist",
     }],
     watchHistory:[{
-        playlist:{
-            type : mongoose.Types.ObjectId,
-            ref : "Playlist",
-            required : true
+        emotionName : {
+            type : String,
+            required : true,
+            lowercase : true,
+            trim : true
         },
-        watchedAt : {
-            type : Date,
-            default : Date.now,
+        count : {
+            type : Number,
+            required : true
         }
     }]
 

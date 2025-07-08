@@ -12,6 +12,7 @@ import PlaylistCard from './playlistCard/PlaylistCard';
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer} from "react-toastify";
+import Error400 from './ui/Error400';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path='/dashboard' element={<UserDashboard />} />
           <Route path='/favourites' element={<Favourites />} />
           <Route path='/playlist-card' element={<PlaylistCard />} />
+          <Route path='*' element={<Error400/>} />
         </Routes>
       </main>
 

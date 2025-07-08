@@ -44,7 +44,7 @@ function Favourites() {
       await axios.delete('/favourites/', { data: { trackId : songId } }, { withCredentials: true });
 
 
-      e.target.style.display = "none"
+      e.target.parentElement.style.display = "none"
       toast.success("Removed from favorites");
 
 
@@ -97,6 +97,7 @@ function Favourites() {
               <iframe
               className='object-cover rounded-sm'
                 width="40" height="40" src={`https://www.youtube.com/embed/${videoId}`}
+                allowFullScreen
               />
 
               <div className='flex flex-col gap-2'>

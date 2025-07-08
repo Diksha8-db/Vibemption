@@ -6,6 +6,7 @@ import {
   updateUser,
   getCurrentUser,
   refreshAccessToken,
+  addEmotionToWatchHistory
 } from "../controllers/user.controller.js";
 import { uploadFile } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -22,6 +23,7 @@ router.route("/update-details").patch(verifyJWT, uploadFile.single("coverImage")
 
 router.route("/refreshToken").post(refreshAccessToken)
 router.route("/user-dashboard").get(verifyJWT, getCurrentUser);
+router.route("/add-history").post(verifyJWT, addEmotionToWatchHistory)
 
 
 export default router;

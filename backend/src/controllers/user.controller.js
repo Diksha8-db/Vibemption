@@ -5,24 +5,23 @@ import upload from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
-const generateAccessAndRefreshToken = async(userId) => {
-  try{
-  const currentUser = await User.findById(userId)
-  const accessToken = currentUser.generateAccessToken()
-  const refreshToken = currentUser.generateRefreshToken()
+const generateAccessAndRefreshToken = async (userId) => {
+  try {
+    const currentUser = await User.findById(userId);
+    const accessToken = currentUser.generateAccessToken();
+    const refreshToken = currentUser.generateRefreshToken();
 
-  currentUser.refreshToken = refreshToken
-  await currentUser.save({validateBeforeSave : false})
+    currentUser.refreshToken = refreshToken;
+    await currentUser.save({ validateBeforeSave: false });
 
-  return {accessToken, refreshToken}
-  }
-  catch(error){
+    return { accessToken, refreshToken };
+  } catch (error) {
     throw new ApiError(
       500,
       "Sorry for incovinience. Unable to generate access and refresh token"
-    )
+    );
   }
-}
+};
 
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -55,7 +54,9 @@ const registerUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+    user._id
+  );
 
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong. Please try later");
@@ -67,21 +68,23 @@ const registerUser = asyncHandler(async (req, res) => {
   };
 
   return res
-          .status(200)
-          .cookie("accessToken", accessToken, options)
-          .cookie("refreshToken", refreshToken, options)
-          .json(new ApiResponse(201, "Registered successfully", {
-            user : createdUser,
-            accessToken,
-            refreshToken
-}));
-})
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(201, "Registered successfully", {
+        user: createdUser,
+        accessToken,
+        refreshToken,
+      })
+    );
+});
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   if (
-    [email, password].some(field=> {
+    [email, password].some((field) => {
       field?.trim() === "";
     })
   ) {
@@ -103,9 +106,13 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credentials");
   }
 
-  const {accessToken, refreshToken} = await generateAccessAndRefreshToken(existedUser._id)
+  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+    existedUser._id
+  );
 
-  const loggedInUser = await User.findById(existedUser._id).select("-password -refreshToken")
+  const loggedInUser = await User.findById(existedUser._id).select(
+    "-password -refreshToken"
+  );
 
   const options = {
     httpOnly: true,
@@ -113,30 +120,32 @@ const loginUser = asyncHandler(async (req, res) => {
   };
 
   return res
-          .status(200)
-          .cookie("accessToken", accessToken, options)
-          .cookie("refreshToken", refreshToken, options)
-          .json(new ApiResponse(201, "Logged in successfully", {
-            user : loggedInUser,
-            accessToken,
-            refreshToken
-          }));
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(201, "Logged in successfully", {
+        user: loggedInUser,
+        accessToken,
+        refreshToken,
+      })
+    );
 });
 
-const logoutUser = asyncHandler(async(req,res) => {
-   await User.findByIdAndUpdate(
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set : {
-        refreshToken : undefined
-      }
+      $set: {
+        refreshToken: undefined,
+      },
     },
     {
-      new : true
+      new: true,
     }
-   )
+  );
 
-   const options = {
+  const options = {
     httpOnly: true,
     secure: true,
   };
@@ -146,8 +155,7 @@ const logoutUser = asyncHandler(async(req,res) => {
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, "User logged out successfully"));
-
-})
+});
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   try {
@@ -203,8 +211,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   const user = req.user;
 
-  if(!user){
-    return res.status(400).json(new ApiError(400, "Login/Sigup Required"))
+  if (!user) {
+    return res.status(400).json(new ApiError(400, "Login/Sigup Required"));
   }
 
   return res
@@ -212,50 +220,111 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Current user fetched successfully", req.user));
 });
 
-const updateUser = asyncHandler(async(req,res) => {
+const updateUser = asyncHandler(async (req, res) => {
+  const { fullName, email } = req.body;
 
-  const {fullName, email} = req.body
-
-  const updateData = {}
+  const updateData = {};
 
   if (typeof fullName === "string" && fullName !== "") {
     updateData.fullName = fullName;
   }
 
-  if(email?.trim() !== ""){
+  if (email?.trim() !== "") {
     updateData.email = email?.trim();
   }
 
-
-  if(Object.keys(updateData).length === 0){
-    throw new ApiError(400, "At least one field is required to be updated")
+  if (Object.keys(updateData).length === 0) {
+    throw new ApiError(400, "At least one field is required to be updated");
   }
 
-  console.log(req.file)
-  console.log(req.body)
+  console.log(req.file);
+  console.log(req.body);
 
   // coverImage upload should be optional
   let coverImageUrl = "";
 
-  if(req.file?.path){
+  if (req.file?.path) {
     const uploadedImage = await upload(req.file.path);
     coverImageUrl = uploadedImage?.url || "";
   }
 
-
-  const updatedUserDetails = await User.findByIdAndUpdate(req.user?._id,{
-    $set : {
-      ...updateData,
-      coverImage : coverImageUrl
+  const updatedUserDetails = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        ...updateData,
+        coverImage: coverImageUrl,
+      },
+    },
+    {
+      new: true,
     }
-  },
-  {
-    new : true
+  ).select("-password");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "User details updated successfully",
+        updatedUserDetails
+      )
+    );
+});
+
+const addEmotionToWatchHistory = asyncHandler(async (req, res) => {
+  const { emotionName } = req.body;
+
+  if (!emotionName) {
+    throw new ApiError(400, "Emotions not detected");
   }
-).select("-password")
 
- return res.status(200).json(new ApiResponse(200, "User details updated successfully", updatedUserDetails))
-})
+  const userId = req.user?._id;
 
+  if (!userId) {
+    throw new ApiError(400, "User not authenticated");
+  }
 
-export { registerUser, loginUser, logoutUser,getCurrentUser, updateUser, refreshAccessToken };
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(400, "User not found");
+  }
+
+  const emotionToBeChceked = emotionName.toLowerCase().trim();
+
+  const existingEmotion = user.watchHistory.find(
+    (index) => index.emotionName == emotionToBeChceked
+  );
+
+  if (existingEmotion) {
+    existingEmotion.count += 1;
+  } else {
+    user.watchHistory.unshift({
+      emotionName: emotionToBeChceked,
+      count: 1,
+    });
+  }
+
+  await user.save();
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "Emotion added to your watch history",
+        user.watchHistory
+      )
+    );
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getCurrentUser,
+  updateUser,
+  refreshAccessToken,
+  addEmotionToWatchHistory,
+};

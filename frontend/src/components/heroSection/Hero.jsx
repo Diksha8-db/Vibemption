@@ -34,6 +34,10 @@ function Hero() {
         }
       );
 
+      const userHistory = await axios.post('/users/add-history', {
+        emotionName : mood.inputtedText
+      })
+
       let fetchedData = response.data.data;
 
       // if fetched from database

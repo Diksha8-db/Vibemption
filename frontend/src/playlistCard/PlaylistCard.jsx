@@ -1,5 +1,4 @@
 import React from "react";
-import FloatingMusicPlayer from "./FloatingMusicPlayer";
 import Player from "./Player";
 import { usePlaylist } from "../context/PlaylistContext";
 import { toast } from "react-toastify";
@@ -45,9 +44,6 @@ function PlaylistCard() {
           <Player/>
         </div>
 
-        <div>
-          <FloatingMusicPlayer />
-        </div>
       </div>
     </section>
   );
