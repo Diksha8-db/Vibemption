@@ -1,101 +1,93 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import "../../index.css";
-import NavMenu from "./NavMenu";
-import Logo from "../../ui/Logo";
-import axios from "../../utils/axios.js";
+import { Link, useNavigate } from "react-router-dom";
+import axios from '../../utils/axios.js'
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import Logo from "../../ui/Logo.jsx";
+import NavMenu from "./NavMenu.jsx";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navigate = useNavigate()
+  const [ isAuthenticated, setIsAuthenticated ] = useState(false)
+
+  const navigate = useNavigate();
 
   const navItems = [
-    { name: "Home", href: "/#home" },
+    { name: "Home", href: "/" },
     { name: "About", href: "/#about" },
     { name: "Explore", href: "/explore" },
     { name: "Dashboard", href: "/dashboard" },
     { name: "Help", href: "/help" },
   ];
 
-  /* checking if user logged in or not */
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect( () => {
-    const checkAuth = async() => {
-        try{
-        const res = await axios.get('/users/user-dashboard', {
-            withCredentials: true
-        })
-
-        setIsAuthenticated(true)
-
-        // toast.success("User Authenticated")
-    }
-    catch(error){
-        const message = error.response?.data?.message || "Something went wrong"
-        setIsAuthenticated(false)
-        // toast.error(message)
-    }
-        
-    }
-
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await axios.get("/users/user-dashboard", { withCredentials: true });
+        setIsAuthenticated(true);
+      } catch {
+        setIsAuthenticated(false);
+      }
+    };
     checkAuth();
-  },[])
+  }, [])
 
-
-  const handleLogOut = async(e) => {
+  const handleLogOut = async (e) => {
     e.preventDefault();
-
-    try{
-      const response = await axios.post('/users/logout',{
-        withCredentials: true
-      })
-
-      toast.message("Logged out successfully!!")
-      setIsAuthenticated(false)
-      navigate('/')
+    try {
+      await axios.post("/users/logout", {}, { withCredentials: true });
+      setIsAuthenticated(false);
+      toast.success("Logged out successfully!!");
+      navigate("/");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong");
     }
-    catch(error){
-      toast.error(error.response?.data?.message || "Something went wrong")
-    }
-  }
+  };
+
   return (
-    <section className="w-full px-2 py-2 ">
+    <section className="w-full px-2 py-2">
       <div className="md:w-[80%] w-[90%] mx-auto flex justify-between items-center">
-        {/* Logo */}
         <Logo />
 
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-8 items-center">
-          {navItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.href}
-              className="text-white text-[16px] hover:text-purple-300"
-            >
-              {item.name}
-            </a>
-          ))}
+          {navItems.map((item, idx) => {
+            const to =
+              item.name === "Dashboard" && !isAuthenticated
+                ? "/error"
+                : item.href;
+            return (
+              <Link
+                key={idx}
+                to={to}
+                className="text-white text-[16px] hover:text-purple-300"
+              >
+                {item.name}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex gap-3 items-center">
           {!isAuthenticated ? (
             <>
-              <button className="px-5 font-semibold py-1 navButton">
+              <Link to="/login" className="px-5 font-semibold py-1 navButton">
                 Log in
-              </button>
-              <button className="navButton px-4 font-semibold py-1">
+              </Link>
+              <Link
+                to="/signup"
+                className="navButton px-4 font-semibold py-1"
+              >
                 Sign up
-              </button>
+              </Link>
             </>
           ) : (
-            <button 
-            onClick={handleLogOut}
-            className="navButton px-4 font-semibold py-1">
+            <button
+              onClick={handleLogOut}
+              className="navButton px-4 font-semibold py-1"
+            >
               Logout
             </button>
           )}
@@ -103,7 +95,7 @@ function Header() {
 
         {/* Mobile Menu Toggle */}
         <div className="md:hidden">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button onClick={() => setIsMenuOpen((o) => !o)}>
             {isMenuOpen ? (
               <X color="#1ed760" size={28} />
             ) : (
@@ -113,30 +105,31 @@ function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Nav */}
       {isMenuOpen && (
         <div className="md:hidden">
           <NavMenu />
-          {/* Optionally add buttons below NavMenu */}
-          <div className="flex flex-col gap-3 mt-2 mb-2 items-center justify-center">
-
-            {!isAuthenticated ? 
-            <>
-            <a href="/login" className="px-5 font-semibold py-1 navButton">
-              Log in
-            </a>
-            <a href="/signup" className="navButton px-4 font-semibold py-1">
-              Sign up
-            </a>
-            </>
-            :
-            <button
-            onClick={handleLogOut}
-            href="/logout" className="navButton px-4 font-semibold py-1">
-            Logout
-          </button>
-          }
-            
+          <div className="flex flex-col gap-3 mt-2 mb-2 items-center">
+            {!isAuthenticated ? (
+              <>
+                <Link to="/login" className="px-5 font-semibold py-1 navButton">
+                  Log in
+                </Link>
+                <Link
+                  to="/signup"
+                  className="navButton px-4 font-semibold py-1"
+                >
+                  Sign up
+                </Link>
+              </>
+            ) : (
+              <button
+                onClick={handleLogOut}
+                className="navButton px-4 font-semibold py-1"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       )}

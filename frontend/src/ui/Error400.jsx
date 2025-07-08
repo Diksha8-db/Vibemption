@@ -11,9 +11,12 @@ function Error400() {
         <p
         className='text-gray-300'
         >It seems that the page you are looking is not available</p>
+        <p
+        className='text-gray-300'
+        >Please ensure to login/signup to listen to your fav track🎶 </p>
 
-        <Link to='/'
-        
+        <Link 
+        to='/'
         className='font-semibold px-4 py-2 bg-green-400 text-gray-950 rounded-xl hover:bg-transparent hover:border-2 border-green-400 hover:text-green-400'>
         Go Home
         </Link>

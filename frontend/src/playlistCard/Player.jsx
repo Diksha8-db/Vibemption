@@ -111,8 +111,8 @@ function Player() {
               )}
 
               <div className="flex flex-col gap-2">
-                <h1 className="text-sm md:text-xl text-white font-semibold">{song.title}</h1>
-                <h1 className="text-sm md:text-lg text-gray-400">{song.channelTitle}</h1>
+                <h1 className="text-sm md:text-lg text-white font-semibold">{song.title}</h1>
+                <h1 className="text-sm text-gray-400">{song.channelTitle}</h1>
               </div>
             </div>
 

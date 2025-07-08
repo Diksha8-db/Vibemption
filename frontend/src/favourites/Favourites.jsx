@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
+import { Heart, Play, Pause } from "lucide-react";
 import axios from "../utils/axios.js";
 import { toast } from "react-toastify";
 
 function Favourites() {
   const [haveFavourites, setHaveFavourites] = useState(false);
   const [favTrack, setFavTrack] = useState([])
+  const [playingTrackId, setPlayingTrackId] = useState(null);
 
   function getVideoId(url) {
     const match = url.match(/(?:youtube\.com\/(?:[^/]+\/\S+\/|\S+\/|(?:v|e(?:mbed)?)\/|\S+\?v=)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
@@ -94,11 +95,50 @@ function Favourites() {
             className="px-4 py-2 bg-[#241132] hover:opacity-60 transition-all duration-300 rounded-xl flex flex-row items-center justify-between mb-6"
           >
             <div className="flex flex-row gap-6 items-center">
-              <iframe
-              className='object-cover rounded-sm'
-                width="40" height="40" src={`https://www.youtube.com/embed/${videoId}`}
-                allowFullScreen
-              />
+            {!(playingTrackId == song._id) ? (
+                <iframe
+                  className="object-cover rounded-sm"
+                  width="40" height="40"
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                />
+              ) : (
+                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[300px] md:w-[500px] bg-[#1a0832] text-white rounded-2xl shadow-2xl p-4 flex items-center space-x-4 z-50 backdrop-blur-sm border border-white/10">
+                  <iframe
+                    className="object-cover rounded-sm"
+                    width="40"
+                    height="40"
+                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                    allow="autoplay"
+                  />
+
+                  <div className="flex-1">
+                    <h3 className="text-sm font-semibold line-clamp-1">{song.title}</h3>
+                    <p className="text-xs text-gray-400">{song.channelTitle}</p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="text-gray-200 hover:text-pink-500"
+                      onClick={(e) =>
+                        handleDeleteFromFavourites(e, song._id)
+                          
+                      }
+                    >
+                      
+                        <Heart size={18} fill="#F656A9" strokeWidth={0} />
+                      
+                    </button>
+
+                    <button
+                      className="text-white hover:text-green-400"
+                      onClick={() => setPlayingTrackId(null)}
+                    >
+                      <Pause size={18} color="#1ed760" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
 
               <div className='flex flex-col gap-2'>
                 <h1 className="text-sm md:text-xl text-white font-semibold">{song.title}</h1>
@@ -114,10 +154,25 @@ function Favourites() {
               >
                 <Heart fill="#E60178"  strokeWidth={0} />
               </button>
+              <button
+                className='cursor-pointer'
+                onClick={(e) => setPlayingTrackId(song._id)}
+              >
+                <Play fill="green"  strokeWidth={0} />
+              </button>
             </div>
           </div>
         );
       })}
+    </div>
+
+    <div className='flex items-center justify-center'>
+      <a
+      href='/dashboard'
+      className='bg-green-400 px-5 py-2 font-semibold rounded-xl mb-10'
+      >
+        Go to Dashboard
+      </a>
     </div>
       </div>
     </div>

@@ -136,11 +136,11 @@ function UserDashboard() {
         <section className="w-full">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
             <div className="col-span-1 py-30 lg:flex hidden">
-              <div className="flex-col gap-9 pl-12 ">
+              <div className="flex-col pl-12 ">
                 {navItems.map((item, index) => (
                   <a
                     key={index}
-                    className="text-white flex gap-4 cursor-pointer items-center"
+                    className="text-white mt-7 flex gap-4 cursor-pointer items-center"
                   >
                     <p className="text-(--color-purple-200) hover:text-purple-400">
                       {item.icon}
@@ -203,12 +203,22 @@ function UserDashboard() {
                 <div className="grid grid-cols-1 gap-7 h-[50%]">
                   {/* chart of the mood fetched from the user database */}
                   <h1 className='text-center text-xl text-purple-500 font-semibold'>Mood Analysis 🎭</h1>
+                  { (emotionList.length > 0) ? 
                   <canvas
                     id="moodChart" 
                     width="300"
                     height="300"
                     className='mx-auto' 
                   ></canvas>
+                  :
+                  <div className='flex flex-col gap-4 items-center'>
+                  <h1 className='text-gray-400 text-lg '>Explore playlists to track your mood history</h1>
+                  <a
+                  href='/' 
+                  className='bg-green-400 rounded-xl px-4 py-2 text-center'>Explore Playlist</a>
+                  </div>
+                  
+                  }
                 </div>
 
                 <div className='flex flex-col gap-7 mt-20'>

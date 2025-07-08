@@ -30,6 +30,7 @@ function App() {
           <Route path='/dashboard' element={<UserDashboard />} />
           <Route path='/favourites' element={<Favourites />} />
           <Route path='/playlist-card' element={<PlaylistCard />} />
+          <Route path='/error' element={<Error400/>}/>
           <Route path='*' element={<Error400/>} />
         </Routes>
       </main>
