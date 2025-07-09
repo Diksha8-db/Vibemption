@@ -17,8 +17,8 @@ function Login() {
       event.preventDefault();
 
       try{
-        const response = await axios.post('/users/login', formData);
-        localStorage.setItem('token', response.data.refreshToken);
+        const response = await axios.post('/users/login', formData, {withCredentials: true});
+        
         
         toast.success("Logged in successfully.Redirecting...")
         navigate('/dashboard')
@@ -29,8 +29,6 @@ function Login() {
         toast.error(message)
       }
    }
-
-
 
   return (
     <section className="w-full px-3 pb-8 min-h-screen">
