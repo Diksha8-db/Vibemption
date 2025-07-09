@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import axios from "../utils/axios.js";
 import "../index.css";
 import Loader from "../ui/Loader.jsx";
-import demoProfilePic from '../../public/demoProfilePicture.jpg'
+import demoProfilePicture from '../images/demoProfilePicture.jpg'
 
 function UserDashboard() {
   const navItems = [
@@ -163,9 +163,7 @@ function UserDashboard() {
                 <div className="flex items-center w-[80%] mx-auto">
                   <img
                     src={
-                      user.coverImage
-                        ? user.coverImage
-                        : {demoProfilePic}
+                      user?.coverImage || demoProfilePicture
                     }
                     className=" rounded-full mx-auto object-fit md:w-50 md:h-50 h-44 w-44"
                   />
