@@ -1,5 +1,4 @@
 import React from "react";
-import './App.css';
 
 // components
 import Login from './components/Auth/Login';
@@ -18,7 +17,6 @@ import Error400 from './ui/Error400';
 // routes
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer} from "react-toastify";
-
 
 function App() {
   return (

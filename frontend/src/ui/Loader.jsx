@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 const Loader = () => {
   return (
@@ -13,11 +12,11 @@ const Loader = () => {
     </StyledWrapper>
     <div className='flex flex-col gap-10 items-center'>
         <h1 className='text-white font-semibold text-4xl text-center'> Loading !! Please wait ⏳</h1>
-        <Link to='/'
+        <a href='/'
         
         className='font-semibold px-4 py-2 bg-green-400 text-gray-950 rounded-xl hover:bg-transparent hover:border-2 border-green-400 hover:text-green-400'>
         Go Home
-        </Link>
+        </a>
       </div>
     </div>
     

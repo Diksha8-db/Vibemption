@@ -31,9 +31,10 @@ function Help() {
                 <p><span className='text-purple-600 font-semibold'>STEP 4</span>: Go to your personalised dashboard and see how you were in past days..⌛</p>
 
                 </div>
-                <button
+                <a
+                href='/'
                 className='items-center flex gap-2 bg-purple-500 justify-center px-6 py-2 rounded-xl font-semibold hover:border-2 hover:bg-transparent hover:text-purple-500'
-                ><Home/> Home</button>
+                ><Home/> Home</a>
             </div>
           </div>
         </div>
