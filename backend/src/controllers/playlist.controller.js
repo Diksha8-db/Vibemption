@@ -47,7 +47,6 @@ const fetchPlaylist = asyncHandler(async (req, res) => {
           part: "snippet",
           type: "playlist",
           q: `${fetchedMood} song playlist`,
-          minResults: 18,
           maxResults: 25,
           key: process.env.YOUTUBE_API_KEY,
         },

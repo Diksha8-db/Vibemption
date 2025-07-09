@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import upload from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import { GoogleGenAI } from "@google/genai";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -258,6 +259,8 @@ const updateUser = asyncHandler(async (req, res) => {
     }
   ).select("-password");
 
+  console.log(updatedUserDetails)
+
   return res
     .status(200)
     .json(
@@ -270,6 +273,7 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 const addEmotionToWatchHistory = asyncHandler(async (req, res) => {
+  
   const { emotionName } = req.body;
 
   if (!emotionName) {
@@ -288,7 +292,20 @@ const addEmotionToWatchHistory = asyncHandler(async (req, res) => {
     throw new ApiError(400, "User not found");
   }
 
-  const emotionToBeChceked = emotionName.toLowerCase().trim();
+  const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+    const mood = await genAI.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `Analyse the mood of the the text : ${emotionName} and give a answer of one word from the following : happy,sad, focussed, reflective,chill, relaxed, energetic, angry`,
+    });
+
+    const fetchedMood = mood.text;
+
+    if (fetchedMood?.trim().toLowerCase() === "") {
+      throw new ApiError(500, "Unable to process your mood . Please try later");
+    }
+
+  const emotionToBeChceked = fetchedMood.toLowerCase().trim();
 
   const existingEmotion = user.watchHistory.find(
     (index) => index.emotionName == emotionToBeChceked
