@@ -64,6 +64,7 @@ function UserDashboard() {
           toast.error("User not found!!");
         }
 
+        console.log(userDetails.data.data)
         setUser(userDetails.data.data);
       } catch (error) {
         toast.error(
@@ -172,10 +173,10 @@ function UserDashboard() {
                 {/* Personal Information */}
                 <div className="flex flex-col gap-4 px-4">
                   <h1 className="text-white font-semibold text-4xl">
-                    {user.fullName}
+                    {user?.fullName}
                   </h1>
                   <h1 className="text-(--color-secondary) text-lg">
-                    {user.email}
+                    {user?.email}
                   </h1>
                   <a
                     href="/update-profile"
