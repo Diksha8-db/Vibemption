@@ -17,7 +17,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-gray-300">
               <li><a href="/" className="hover:text-purple-300">Home</a></li>
               <li><a href="/dashboard" className="hover:text-purple-300">Dashboard</a></li>
-              <li><a href="/playlists" className="hover:text-purple-300">Playlists</a></li>
+              <li><a href="/explore" className="hover:text-purple-300">Playlists</a></li>
               <li><a href="/favorites" className="hover:text-purple-300">Favorites</a></li>
             </ul>
           </div>
@@ -29,8 +29,8 @@ const Footer = () => {
               <li>Email: bhartidiksha2008@gmail.com</li>
               <li>
                 <div className="flex gap-3 mt-1">
-                  <a href="#" className="hover:text-purple-400">Linkedin</a>
-                  <a href="#" className="hover:text-purple-400">GitHub</a>
+                  <a href="https://www.linkedin.com/in/diksha-bharti-055499326/" className="hover:text-purple-400">Linkedin</a>
+                  <a href="https://github.com/Diksha8-db" className="hover:text-purple-400">GitHub</a>
                 </div>
                 </li>
             </ul>

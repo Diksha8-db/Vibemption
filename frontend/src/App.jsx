@@ -10,6 +10,7 @@ import UserDashboard from './dashboard/UserDashboard';
 import Favourites from './favourites/Favourites';
 import PlaylistCard from './playlistCard/PlaylistCard';
 import React from "react";
+import Help from './ui/Help.jsx'
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer} from "react-toastify";
 import Error400 from './ui/Error400';
@@ -29,6 +30,7 @@ function App() {
           <Route path='/#about' element={<About />} />
           <Route path='/dashboard' element={<UserDashboard />} />
           <Route path='/favourites' element={<Favourites />} />
+          <Route path='/help' element={<Help/>} />
           <Route path='/playlist-card' element={<PlaylistCard />} />
           <Route path='/error' element={<Error400/>}/>
           <Route path='*' element={<Error400/>} />
