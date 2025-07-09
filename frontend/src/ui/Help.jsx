@@ -8,7 +8,7 @@ function Help() {
     <section className='w-full py-10 pt-20'>
       <div className='w-[80%] mx-auto flex flex-col gap-20'>
         <div>
-          <h1 className='text-green-400 text-4xl font-semibold text-center'>How Vibemption Work ?</h1>
+          <h1 className='text-green-400 text-4xl font-semibold text-center mb-10'>How Vibemption Work ?</h1>
           <div className='grid lg:grid-cols-2 grid-cols-1 gap-6'>
             <div>
               <DotLottieReact
