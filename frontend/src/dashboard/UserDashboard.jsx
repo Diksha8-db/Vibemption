@@ -59,7 +59,6 @@ function UserDashboard() {
 
         getEmotionList(emotionName);
 
-
         if (!userDetails?.data?.data) {
           toast.error("User not found!!");
         }
@@ -70,6 +69,7 @@ function UserDashboard() {
         toast.error(
           error.response?.data?.message || "Unable to fetch user details"
         );
+        console.log(error)
       } finally {
         setIsLoading(false);
       }

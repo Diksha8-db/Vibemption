@@ -25,5 +25,4 @@ router.route("/refreshToken").post(refreshAccessToken)
 router.route("/user-dashboard").get(verifyJWT, getCurrentUser);
 router.route("/add-history").post(verifyJWT, addEmotionToWatchHistory)
 
-
 export default router;

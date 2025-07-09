@@ -21,6 +21,7 @@ function Login() {
         
         
         toast.success("Logged in successfully.Redirecting...")
+        console.log(response.data.data)
         navigate('/dashboard')
 
       }
