@@ -5,7 +5,7 @@ function NavMenu() {
     const navItems = [
         {
             name : "Home",
-            href : "/#hero",
+            href : "/",
         },
         {
             name : "About",

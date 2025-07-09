@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../../index.css";
-import { ToastContainer, toast } from 'react-toastify';
-import Logo from "../../ui/Logo.jsx";
+import {  toast } from 'react-toastify';
 import axios from "../../utils/axios.js";
 import {useNavigate} from 'react-router-dom'
 import { Link } from "react-router-dom";
@@ -34,16 +33,16 @@ function Signup() {
     try {
       const res = await axios.post("/users/register", formData);
 
-      console.log("Registered:", res.data);
+      // console.log("Registered:", res.data);
       localStorage.setItem('token', res.data.refreshToken);
 
       toast.success("Registered Successfully!! Redirecting....")
       navigate('/dashboard')
 
     } catch (err) {
-      console.error("Registration failed:", err.response?.data || err.message);
+      toast.error("Registration failed:", err.response?.data || err.message);
 
-      console.log(err.response?.data.message)
+      // console.log(err.response?.data.message)
       const message = err?.response?.data?.message || "Registration failed";
       toast.error(message);
     }

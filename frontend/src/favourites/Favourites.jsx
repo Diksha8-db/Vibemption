@@ -21,7 +21,6 @@ function Favourites() {
         withCredentials: true
       })
 
-      console.log("Fav Response on frontend",response.data.data);
       setFavTrack(response.data.data);
       if(response.data.data.length > 0){
         setHaveFavourites(true);

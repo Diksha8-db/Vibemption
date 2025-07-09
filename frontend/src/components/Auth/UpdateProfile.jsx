@@ -16,7 +16,7 @@ function UpdateProfile() {
    const navItems = [
     {
       name: "Home",
-      href: "#home",
+      href: "/",
       icon: <House />,
     },
     {
@@ -46,7 +46,7 @@ function UpdateProfile() {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log("File:", file);
+    // console.log("File:", file);
 
     if (file) {
       setImage(URL.createObjectURL(file));
@@ -74,8 +74,6 @@ function UpdateProfile() {
         formDataToSend.append("coverImage", formData.coverImage);
       }
 
-      console.log(formDataToSend)
-
       const response = await axios.patch("/users/update-details", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data", // Set header for file upload
@@ -83,7 +81,6 @@ function UpdateProfile() {
         withCredentials: true, // Send cookies (for JWT)
       });
 
-      console.log(response.data);
       toast.success("Profile Updated successfully !");
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong";

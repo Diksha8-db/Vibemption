@@ -8,7 +8,6 @@ function PlaylistCard() {
 
    const {playlist} = usePlaylist()
 
-   console.log(playlist)
 
    if(!playlist){
     toast.error("Playlist not found")

@@ -1,4 +1,7 @@
+import React from "react";
 import './App.css';
+
+// components
 import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
 import UpdateProfile from './components/Auth/UpdateProfile';
@@ -9,11 +12,13 @@ import Hero from './components/heroSection/Hero';
 import UserDashboard from './dashboard/UserDashboard';
 import Favourites from './favourites/Favourites';
 import PlaylistCard from './playlistCard/PlaylistCard';
-import React from "react";
 import Help from './ui/Help.jsx'
+import Error400 from './ui/Error400';
+
+// routes
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer} from "react-toastify";
-import Error400 from './ui/Error400';
+
 
 function App() {
   return (

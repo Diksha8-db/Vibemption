@@ -58,12 +58,11 @@ function UserDashboard() {
 
         getEmotionList(emotionName);
 
-        console.log(emotionName);
 
         if (!userDetails?.data?.data) {
           toast.error("User not found!!");
         }
-        console.log(userDetails.data.data);
+
         setUser(userDetails.data.data);
       } catch (error) {
         toast.error(
@@ -199,7 +198,7 @@ function UserDashboard() {
                 </p>
                 
 
-                {/* Recent playlist */}
+                {/* Recent moods and fav button */}
                 <div className="grid grid-cols-1 gap-7 h-[50%]">
                   {/* chart of the mood fetched from the user database */}
                   <h1 className='text-center text-xl text-purple-500 font-semibold'>Mood Analysis 🎭</h1>

@@ -237,9 +237,6 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "At least one field is required to be updated");
   }
 
-  console.log(req.file);
-  console.log(req.body);
-
   // coverImage upload should be optional
   let coverImageUrl = "";
 

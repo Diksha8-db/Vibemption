@@ -18,7 +18,6 @@ function Login() {
 
       try{
         const response = await axios.post('users/login', formData);
-        console.log(response.data)
         localStorage.setItem('token', response.data.refreshToken);
         
         toast.success("Logged in successfully.Redirecting...")
@@ -27,7 +26,6 @@ function Login() {
       }
       catch(error){
         const message = error.response?.data?.message || 'Something went wrong!'
-        toast.error(message)
       }
    }
 

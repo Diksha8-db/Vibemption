@@ -22,7 +22,6 @@ const upload = async(localFilePath) => {
     }
     catch(error){
         fs.unlinkSync(localFilePath)
-        console.log("Couldnot upload files")
         return null
     }
 }

@@ -22,7 +22,6 @@ const addToFavourites = asyncHandler(async(req,res) => {
         throw new ApiError(400, "User not found. Please sign in or register")
     }
 
-    console.log("TRACK ID", trackId)
 
     if(user.favourites?.includes(trackId)){
         return res.status(200).json(new ApiResponse(200, "Playlist already added to your favourites"))
@@ -31,8 +30,6 @@ const addToFavourites = asyncHandler(async(req,res) => {
     user.favourites.push(trackId);
     await user.save()
 
-    console.log("USER FAVORITES",user.favourites)
-    console.log("After adding", user)
     return res.status(200).json(new ApiResponse(200,"Track added to your favourites", user.favourites))
 
 })
@@ -63,8 +60,6 @@ const removeFromFavourites = asyncHandler(async(req, res) => {
     user.favourites = user.favourites.filter(id => id.toString() !== trackId.toString())
 
     await user.save()
-    console.log("AFTER DELTING", user.favourites)
-    console.log("After deleting", user)
 
     return res.status(200).json(new ApiResponse(200, "Playlist removed from favourites", user.favourites))
 })
@@ -82,11 +77,8 @@ const userFavourites = asyncHandler(async(req, res) => {
         throw new ApiError(400, "User is not authenticated")
     }
 
-    console.log("USER WHILE FETCHING",user)
-
     const userFav = user.favourites;
 
-    console.log(userFav)
 
     const playlists = await Playlist.find({
         "tracks._id" : {
@@ -94,7 +86,6 @@ const userFavourites = asyncHandler(async(req, res) => {
         }
     })
 
-    console.log(playlists)
 
     const favTracks = [];
 
@@ -106,7 +97,6 @@ const userFavourites = asyncHandler(async(req, res) => {
         })
     })
 
-    console.log("TRACKS THAT IS FAV",favTracks)
     return res.status(200).json(new ApiResponse(200, "Fetched successfully!!", favTracks))
 })
 export {addToFavourites, removeFromFavourites, userFavourites}
