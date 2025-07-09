@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import axios from "../utils/axios.js";
 import "../index.css";
 import Loader from "../ui/Loader.jsx";
+import demoProfilePic from '../../public/demoProfilePicture.jpg'
 
 function UserDashboard() {
   const navItems = [
@@ -164,7 +165,7 @@ function UserDashboard() {
                     src={
                       user.coverImage
                         ? user.coverImage
-                        : "https://static.vecteezy.com/system/resources/previews/004/773/704/original/a-girl-s-face-with-a-beautiful-smile-a-female-avatar-for-a-website-and-social-network-vector.jpg"
+                        : {demoProfilePic}
                     }
                     className=" rounded-full mx-auto object-fit md:w-50 md:h-50 h-44 w-44"
                   />
