@@ -61,7 +61,7 @@ function ContactForm() {
           name='name'
           type="text"
           placeholder="Enter your name"
-          className="text-gray-900 bg-transparent outline-0 border-0 dark:text-gray-200 w-full"
+          className=" bg-transparent outline-0 border-0 text-gray-200 w-full"
           required
         />
       </div>
@@ -72,7 +72,7 @@ function ContactForm() {
           name='email'
           type="email"
           placeholder="Enter your email"
-          className="text-gray-900 bg-transparent outline-0 border-0  dark:text-gray-200 w-full"
+          className="bg-transparent outline-0 border-0text-gray-200 w-full"
           required
         />
       </div>
@@ -86,7 +86,7 @@ function ContactForm() {
           cols="50"
           rows="5"
           required
-          className="w-full resize-none  bg-transparent outline-0 border-0  text-gray-900 dark:text-gray-200"
+          className="w-full resize-none  bg-transparent outline-0 border-0 text-gray-200"
         ></textarea>
       </div>
 
