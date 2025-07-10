@@ -72,7 +72,7 @@ function ContactForm() {
           name='email'
           type="email"
           placeholder="Enter your email"
-          className="bg-transparent outline-0 border-0text-gray-200 w-full"
+          className="bg-transparent outline-0 border-0 text-gray-200 w-full"
           required
         />
       </div>
